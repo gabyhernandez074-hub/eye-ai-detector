@@ -48,7 +48,7 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onChange={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
