@@ -93,9 +93,70 @@ const Index = () => {
         </Tabs>
       </main>
 
+      {/* Developer Credits Section */}
+      <section className="border-t-2 border-primary/20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 py-12">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-primary mb-2">Development Team</h2>
+            <p className="text-muted-foreground">
+              Bioengineering Project - Pontificia Universidad Javeriana (2025)
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* Student 1 */}
+            <div className="bg-card rounded-xl p-6 shadow-lg border-2 border-primary/20 hover:border-primary/40 transition-all hover:shadow-xl">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold mb-4 mx-auto">
+                SA
+              </div>
+              <h3 className="text-lg font-bold text-foreground text-center mb-1">
+                Simón Ávila Morales
+              </h3>
+              <p className="text-sm text-primary text-center font-medium">
+                Biomedical Engineering Student
+              </p>
+            </div>
+
+            {/* Student 2 */}
+            <div className="bg-card rounded-xl p-6 shadow-lg border-2 border-secondary/20 hover:border-secondary/40 transition-all hover:shadow-xl">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center text-white text-2xl font-bold mb-4 mx-auto">
+                AR
+              </div>
+              <h3 className="text-lg font-bold text-foreground text-center mb-1">
+                Andrés Felipe Rosero Chamorro
+              </h3>
+              <p className="text-sm text-secondary text-center font-medium">
+                Biomedical Engineering Student
+              </p>
+            </div>
+
+            {/* Student 3 */}
+            <div className="bg-card rounded-xl p-6 shadow-lg border-2 border-accent/20 hover:border-accent/40 transition-all hover:shadow-xl">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white text-2xl font-bold mb-4 mx-auto">
+                LH
+              </div>
+              <h3 className="text-lg font-bold text-foreground text-center mb-1">
+                Laura Gabriela Hernández Orjuela
+              </h3>
+              <p className="text-sm text-accent text-center font-medium">
+                Biomedical Engineering Student
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full border border-primary/20">
+              <span className="text-sm font-medium text-primary">Bioengineering Project Course</span>
+              <span className="text-sm text-muted-foreground">•</span>
+              <span className="text-sm text-muted-foreground">2025</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="border-t border-border bg-card mt-12">
-        <div className="container mx-auto px-4 py-4">
+      <footer className="border-t border-border bg-card py-6">
+        <div className="container mx-auto px-4">
           <p className="text-xs text-muted-foreground text-center">
             This tool is for research and educational purposes only. Not intended for clinical diagnosis.
             Always consult with a qualified healthcare professional.
