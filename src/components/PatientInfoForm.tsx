@@ -161,6 +161,13 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
                 </FormItem>
               )}
             />
+
+            <button
+              type="submit"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md font-medium transition-colors"
+            >
+              Save Patient Information
+            </button>
           </form>
         </Form>
       </CardContent>

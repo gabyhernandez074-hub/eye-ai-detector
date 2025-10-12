@@ -12,6 +12,7 @@ export interface AnalysisResult {
   diagnosis: string;
   confidence: number;
   gradcamUrl: string;
+  originalImageUrl: string;
 }
 
 export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionProps) => {
@@ -70,6 +71,7 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
       diagnosis: Math.random() > 0.5 ? "Retinal Detachment Detected" : "No Retinal Detachment",
       confidence: Math.floor(Math.random() * 20 + 80), // 80-100%
       gradcamUrl: image || "", // In production, this would be a heatmap overlay
+      originalImageUrl: image || "",
     };
 
     setIsAnalyzing(false);

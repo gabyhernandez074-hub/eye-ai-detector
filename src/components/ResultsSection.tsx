@@ -46,17 +46,42 @@ export const ResultsSection = ({ result, patientData, showGradcam, onToggleGradc
       yPosition += 7;
       pdf.text(`Patient ID: ${patientData.patientId}`, 20, yPosition);
       yPosition += 7;
+      pdf.text(`Age: ${patientData.age}`, 20, yPosition);
+      yPosition += 7;
+      pdf.text(`Gender: ${patientData.gender.charAt(0).toUpperCase() + patientData.gender.slice(1)}`, 20, yPosition);
+      yPosition += 7;
       pdf.text(`Examination Date: ${patientData.examinationDate}`, 20, yPosition);
       yPosition += 7;
       pdf.text(`Referring Doctor: ${patientData.referringDoctor}`, 20, yPosition);
       yPosition += 7;
       if (patientData.clinicalNotes) {
-        pdf.text(`Clinical Notes: ${patientData.clinicalNotes}`, 20, yPosition);
+        const notes = patientData.clinicalNotes.length > 80 
+          ? patientData.clinicalNotes.substring(0, 80) + '...' 
+          : patientData.clinicalNotes;
+        pdf.text(`Clinical Notes: ${notes}`, 20, yPosition);
         yPosition += 7;
       }
     }
     
     yPosition += 5;
+    
+    // Add uploaded image if available (before results)
+    if (result.originalImageUrl) {
+      pdf.setFontSize(14);
+      pdf.text('Retinal Fundus Image', 20, yPosition);
+      yPosition += 10;
+      
+      try {
+        const imgData = result.originalImageUrl;
+        // Smaller image: 100x60
+        pdf.addImage(imgData, 'JPEG', 20, yPosition, 100, 60);
+        yPosition += 70;
+      } catch (error) {
+        pdf.setFontSize(10);
+        pdf.text('Image could not be included in the report', 20, yPosition);
+        yPosition += 10;
+      }
+    }
     
     // Analysis Results
     pdf.setFontSize(14);
@@ -72,26 +97,8 @@ export const ResultsSection = ({ result, patientData, showGradcam, onToggleGradc
     const recommendation = isDetected
       ? "Immediate ophthalmology consultation recommended"
       : "Continue routine monitoring";
-    pdf.text(`Clinical Recommendation: ${recommendation}`, 20, yPosition);
+    pdf.text(`AI Medical Recommendation: ${recommendation}`, 20, yPosition);
     yPosition += 10;
-    
-    // Add uploaded image if available
-    if (result.gradcamUrl) {
-      yPosition += 5;
-      pdf.setFontSize(14);
-      pdf.text('Retinal Image Analysis', 20, yPosition);
-      yPosition += 10;
-      
-      try {
-        const imgData = result.gradcamUrl;
-        pdf.addImage(imgData, 'JPEG', 20, yPosition, 170, 100);
-        yPosition += 110;
-      } catch (error) {
-        pdf.setFontSize(10);
-        pdf.text('Image could not be included in the report', 20, yPosition);
-        yPosition += 10;
-      }
-    }
     
     // Footer
     pdf.setFontSize(8);
