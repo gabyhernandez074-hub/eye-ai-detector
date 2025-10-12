@@ -113,7 +113,10 @@ const Index = () => {
                 Simón Ávila Morales
               </h3>
               <p className="text-sm text-primary text-center font-medium">
-                Biomedical Engineering Student
+                Bioengineering Student
+              </p>
+              <p className="text-xs text-muted-foreground text-center mt-1">
+                avilasimon@javeriana.edu.co
               </p>
             </div>
 
@@ -126,7 +129,10 @@ const Index = () => {
                 Andrés Felipe Rosero Chamorro
               </h3>
               <p className="text-sm text-secondary text-center font-medium">
-                Biomedical Engineering Student
+                Bioengineering Student
+              </p>
+              <p className="text-xs text-muted-foreground text-center mt-1">
+                andres_rosero@javeriana.edu.co
               </p>
             </div>
 
@@ -139,7 +145,10 @@ const Index = () => {
                 Laura Gabriela Hernández Orjuela
               </h3>
               <p className="text-sm text-accent text-center font-medium">
-                Biomedical Engineering Student
+                Bioengineering Student
+              </p>
+              <p className="text-xs text-muted-foreground text-center mt-1">
+                laurahernandezo@javeriana.edu.co
               </p>
             </div>
           </div>
