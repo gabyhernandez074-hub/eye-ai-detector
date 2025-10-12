@@ -53,10 +53,10 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="analysis" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
-            <TabsTrigger value="patient">Patient Info</TabsTrigger>
-            <TabsTrigger value="analysis">AI Analysis</TabsTrigger>
+            <TabsTrigger value="patient">Información del Paciente</TabsTrigger>
+            <TabsTrigger value="analysis">Análisis de IA</TabsTrigger>
             <TabsTrigger value="results" disabled={!analysisResult}>
-              Results
+              Resultados
             </TabsTrigger>
           </TabsList>
 
@@ -167,8 +167,8 @@ const Index = () => {
       <footer className="border-t border-border bg-card py-6">
         <div className="container mx-auto px-4">
           <p className="text-xs text-muted-foreground text-center">
-            This tool is for research and educational purposes only. Not intended for clinical diagnosis.
-            Always consult with a qualified healthcare professional.
+            Esta herramienta es solo para fines de investigación y educación. No está diseñada para diagnóstico clínico.
+            Siempre consulte con un profesional de la salud calificado.
           </p>
         </div>
       </footer>

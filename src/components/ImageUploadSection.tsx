@@ -26,8 +26,8 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
 
     if (!file.type.startsWith("image/")) {
       toast({
-        title: "Invalid file type",
-        description: "Please upload a valid image file (JPEG/PNG)",
+        title: "Tipo de archivo inválido",
+        description: "Por favor cargue un archivo de imagen válido (JPEG/PNG)",
         variant: "destructive",
       });
       return;
@@ -37,8 +37,8 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
     reader.onload = (e) => {
       setImage(e.target?.result as string);
       toast({
-        title: "Image uploaded",
-        description: "Ready for AI analysis",
+        title: "Imagen cargada",
+        description: "Lista para análisis de IA",
       });
     };
     reader.readAsDataURL(file);
@@ -68,7 +68,7 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
 
     // Mock result - in production, this would come from your backend
     const mockResult: AnalysisResult = {
-      diagnosis: Math.random() > 0.5 ? "Retinal Detachment Detected" : "No Retinal Detachment",
+      diagnosis: Math.random() > 0.5 ? "Desprendimiento de Retina Detectado" : "Sin Desprendimiento de Retina",
       confidence: Math.floor(Math.random() * 20 + 80), // 80-100%
       gradcamUrl: image || "", // In production, this would be a heatmap overlay
       originalImageUrl: image || "",
@@ -78,17 +78,17 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
     onAnalysisComplete(mockResult);
     
     toast({
-      title: "Analysis Complete",
-      description: "Results are ready for review",
+      title: "Análisis Completo",
+      description: "Los resultados están listos para revisar",
     });
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-foreground">Fundus Image Upload & Analysis</CardTitle>
+        <CardTitle className="text-foreground">Carga y Análisis de Imagen de Fondo de Ojo</CardTitle>
         <CardDescription className="text-muted-foreground">
-          Upload a fundus photograph for AI-based retinal detachment detection
+          Cargue una fotografía de fondo de ojo para detección de desprendimiento de retina basado en IA
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -106,11 +106,11 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
             <div className="text-center">
               <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <p className="text-sm text-muted-foreground mb-2">
-                Drag and drop a fundus image here, or click to browse
+                Arrastre y suelte una imagen de fondo de ojo aquí, o haga clic para buscar
               </p>
               <label htmlFor="file-upload">
                 <Button variant="outline" className="cursor-pointer" asChild>
-                  <span>Select Image</span>
+                  <span>Seleccionar Imagen</span>
                 </Button>
                 <input
                   id="file-upload"
@@ -135,7 +135,7 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
                   <Button variant="outline" className="w-full cursor-pointer" asChild>
                     <span>
                       <Upload className="mr-2 h-4 w-4" />
-                      Replace Image
+                      Reemplazar Imagen
                     </span>
                   </Button>
                   <input
@@ -160,12 +160,12 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
             {isAnalyzing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Analyzing Image...
+                Analizando Imagen...
               </>
             ) : (
               <>
                 <Eye className="mr-2 h-4 w-4" />
-                Run AI Analysis
+                Ejecutar Análisis de IA
               </>
             )}
           </Button>

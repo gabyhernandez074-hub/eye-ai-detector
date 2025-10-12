@@ -41,9 +41,9 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-foreground">Patient Information</CardTitle>
+        <CardTitle className="text-foreground">Información del Paciente</CardTitle>
         <CardDescription className="text-muted-foreground">
-          Enter patient details for retinal examination
+          Ingrese los datos del paciente para el examen de retina
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -55,9 +55,9 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
                 name="patientName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Patient Name</FormLabel>
+                    <FormLabel>Nombre del Paciente</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input placeholder="Juan Pérez" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -69,9 +69,9 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
                 name="patientId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Patient ID / Document Number</FormLabel>
+                    <FormLabel>Documento de Identificación</FormLabel>
                     <FormControl>
-                      <Input placeholder="PT-12345" {...field} />
+                      <Input placeholder="1234567890" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -83,7 +83,7 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
                 name="age"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Age</FormLabel>
+                    <FormLabel>Edad</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="45" {...field} />
                     </FormControl>
@@ -97,17 +97,17 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
                 name="gender"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gender</FormLabel>
+                    <FormLabel>Sexo</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select gender" />
+                          <SelectValue placeholder="Seleccione sexo" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-card z-50">
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="male">Masculino</SelectItem>
+                        <SelectItem value="female">Femenino</SelectItem>
+                        <SelectItem value="other">Otro</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -120,9 +120,9 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
                 name="referringDoctor"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Referring Doctor</FormLabel>
+                    <FormLabel>Médico</FormLabel>
                     <FormControl>
-                      <Input placeholder="Dr. Jane Smith" {...field} />
+                      <Input placeholder="Dr. Juan López" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -134,7 +134,7 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
                 name="examinationDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Examination Date</FormLabel>
+                    <FormLabel>Fecha de Examen</FormLabel>
                     <FormControl>
                       <Input type="date" {...field} />
                     </FormControl>
@@ -149,10 +149,10 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
               name="clinicalNotes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Clinical Notes / Observations (Optional)</FormLabel>
+                  <FormLabel>Observaciones Clínicas (Opcional)</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter any relevant clinical observations or patient history..."
+                      placeholder="Ingrese observaciones clínicas relevantes o historial del paciente..."
                       className="min-h-[100px] resize-none"
                       {...field}
                     />
@@ -166,7 +166,7 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
               type="submit"
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md font-medium transition-colors"
             >
-              Save Patient Information
+              Guardar Información del Paciente
             </button>
           </form>
         </Form>
