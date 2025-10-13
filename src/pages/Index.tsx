@@ -10,14 +10,17 @@ const Index = () => {
   const [patientData, setPatientData] = useState<PatientFormData | null>(null);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [showGradcam, setShowGradcam] = useState(false);
+  const [activeTab, setActiveTab] = useState("patient");
 
   const handlePatientSubmit = (data: PatientFormData) => {
     setPatientData(data);
+    setActiveTab("analysis");
   };
 
   const handleAnalysisComplete = (result: AnalysisResult) => {
     setAnalysisResult(result);
     setShowGradcam(true);
+    setActiveTab("results");
   };
 
   return (
@@ -51,7 +54,7 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="analysis" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
             <TabsTrigger value="patient">Información del Paciente</TabsTrigger>
             <TabsTrigger value="analysis">Análisis de IA</TabsTrigger>
@@ -68,18 +71,7 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="analysis" className="space-y-6">
-            <div className="grid grid-cols-1 gap-6">
-              <ImageUploadSection onAnalysisComplete={handleAnalysisComplete} />
-              
-              {analysisResult && (
-                <ResultsSection
-                  result={analysisResult}
-                  patientData={patientData}
-                  showGradcam={showGradcam}
-                  onToggleGradcam={() => setShowGradcam(!showGradcam)}
-                />
-              )}
-            </div>
+            <ImageUploadSection onAnalysisComplete={handleAnalysisComplete} />
           </TabsContent>
 
           <TabsContent value="results" className="space-y-6">

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { toast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -38,6 +39,14 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
     },
   });
 
+  const handleSubmit = (data: PatientFormData) => {
+    onSubmit(data);
+    toast({
+      title: "Información guardada",
+      description: "Los datos del paciente se han guardado correctamente.",
+    });
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -48,7 +57,7 @@ export const PatientInfoForm = ({ onSubmit, defaultValues }: PatientInfoFormProp
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
