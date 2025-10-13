@@ -34,10 +34,10 @@ const Index = () => {
               />
               <div className="border-l-2 border-primary/30 pl-4">
                 <h1 className="text-xl font-bold text-primary">
-                  Retinal Detachment AI Detection
+                  Detección de Desprendimiento de Retina con IA
                 </h1>
                 <p className="text-sm text-secondary font-medium">
-                  Clinical Decision Support System
+                  Sistema de Apoyo Diagnóstico para Decisiones Clínicas
                 </p>
               </div>
             </div>
@@ -97,9 +97,9 @@ const Index = () => {
       <section className="border-t-2 border-primary/20 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-2">Development Team</h2>
+            <h2 className="text-2xl font-bold text-primary mb-2">Equipo de Desarrollo</h2>
             <p className="text-muted-foreground">
-              Bioengineering Project - Pontificia Universidad Javeriana (2025)
+              Proyecto de Bioingeniería - Pontificia Universidad Javeriana (2025)
             </p>
           </div>
           
@@ -113,7 +113,7 @@ const Index = () => {
                 Simón Ávila Morales
               </h3>
               <p className="text-sm text-primary text-center font-medium">
-                Bioengineering Student
+                Estudiante de Bioingeniería
               </p>
               <p className="text-xs text-muted-foreground text-center mt-1">
                 avilasimon@javeriana.edu.co
@@ -129,7 +129,7 @@ const Index = () => {
                 Andrés Felipe Rosero Chamorro
               </h3>
               <p className="text-sm text-secondary text-center font-medium">
-                Bioengineering Student
+                Estudiante de Bioingeniería
               </p>
               <p className="text-xs text-muted-foreground text-center mt-1">
                 andres_rosero@javeriana.edu.co
@@ -145,7 +145,7 @@ const Index = () => {
                 Laura Gabriela Hernández Orjuela
               </h3>
               <p className="text-sm text-accent text-center font-medium">
-                Bioengineering Student
+                Estudiante de Bioingeniería
               </p>
               <p className="text-xs text-muted-foreground text-center mt-1">
                 laurahernandezo@javeriana.edu.co
@@ -155,7 +155,7 @@ const Index = () => {
 
           <div className="mt-8 text-center">
             <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full border border-primary/20">
-              <span className="text-sm font-medium text-primary">Bioengineering Project Course</span>
+              <span className="text-sm font-medium text-primary">Proyecto de Bioingeniería</span>
               <span className="text-sm text-muted-foreground">•</span>
               <span className="text-sm text-muted-foreground">2025</span>
             </div>

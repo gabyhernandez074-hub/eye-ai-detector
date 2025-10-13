@@ -28,9 +28,9 @@ export const ResultsSection = ({ result, patientData, showGradcam, onToggleGradc
     pdf.rect(0, 0, pageWidth, 30, 'F');
     pdf.setTextColor(255, 255, 255);
     pdf.setFontSize(20);
-    pdf.text('Retinal Detachment Analysis Report', pageWidth / 2, 15, { align: 'center' });
+    pdf.text('Detección de Desprendimiento de Retina con IA', pageWidth / 2, 15, { align: 'center' });
     pdf.setFontSize(10);
-    pdf.text('Sistema de Apoyo a Decisiones Clínicas Basado en IA', pageWidth / 2, 22, { align: 'center' });
+    pdf.text('Sistema de Apoyo Diagnóstico para Decisiones Clínicas', pageWidth / 2, 22, { align: 'center' });
     
     let yPosition = 45;
     
