@@ -2,8 +2,9 @@ import { useState } from "react";
 import { PatientInfoForm, PatientFormData } from "@/components/PatientInfoForm";
 import { ImageUploadSection, AnalysisResult } from "@/components/ImageUploadSection";
 import { ResultsSection } from "@/components/ResultsSection";
-import { Activity } from "lucide-react";
+import { Activity, RefreshCw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import javerianaLogo from "@/assets/javeriana-logo.png";
 
 const Index = () => {
@@ -21,6 +22,13 @@ const Index = () => {
     setAnalysisResult(result);
     setShowGradcam(true);
     setActiveTab("results");
+  };
+
+  const handleNewDiagnosis = () => {
+    setPatientData(null);
+    setAnalysisResult(null);
+    setShowGradcam(false);
+    setActiveTab("patient");
   };
 
   return (
@@ -55,13 +63,23 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
-            <TabsTrigger value="patient">Información del Paciente</TabsTrigger>
-            <TabsTrigger value="analysis">Análisis de IA</TabsTrigger>
-            <TabsTrigger value="results" disabled={!analysisResult}>
-              Resultados
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex items-center justify-between gap-4">
+            <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
+              <TabsTrigger value="patient">Información del Paciente</TabsTrigger>
+              <TabsTrigger value="analysis">Análisis de IA</TabsTrigger>
+              <TabsTrigger value="results" disabled={!analysisResult}>
+                Resultados
+              </TabsTrigger>
+            </TabsList>
+            <Button 
+              onClick={handleNewDiagnosis}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Nuevo Diagnóstico
+            </Button>
+          </div>
 
           <TabsContent value="patient" className="space-y-6">
             <PatientInfoForm
