@@ -12,6 +12,7 @@ const Index = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [showGradcam, setShowGradcam] = useState(false);
   const [activeTab, setActiveTab] = useState("patient");
+  const [formKey, setFormKey] = useState(0);
 
   const handlePatientSubmit = (data: PatientFormData) => {
     setPatientData(data);
@@ -29,6 +30,7 @@ const Index = () => {
     setAnalysisResult(null);
     setShowGradcam(false);
     setActiveTab("patient");
+    setFormKey(prev => prev + 1); // Force form to remount and clear all fields
   };
 
   return (
@@ -83,6 +85,7 @@ const Index = () => {
 
           <TabsContent value="patient" className="space-y-6">
             <PatientInfoForm
+              key={formKey}
               onSubmit={handlePatientSubmit}
               defaultValues={patientData || undefined}
             />
