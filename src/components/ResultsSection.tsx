@@ -16,7 +16,9 @@ interface ResultsSectionProps {
 export const ResultsSection = ({ result, patientData, showGradcam, onToggleGradcam }: ResultsSectionProps) => {
   if (!result) return null;
 
-  const isDetected = result.diagnosis.toLowerCase().includes("detected");
+  const isDetected = result.diagnosis.toLowerCase().includes("detachment") || 
+                     result.diagnosis.toLowerCase().includes("desprendimiento") ||
+                     result.classIndex === 1;
   const confidenceColor = result.confidence >= 90 ? "success" : result.confidence >= 75 ? "warning" : "destructive";
 
   const handleDownloadReport = async () => {
@@ -70,15 +72,34 @@ export const ResultsSection = ({ result, patientData, showGradcam, onToggleGradc
     
     yPosition += 5;
     
-    // Add uploaded image if available (before results)
-    if (result.originalImageUrl) {
+    // Add visualization images if available
+    if (result.visualization) {
+      pdf.setFontSize(14);
+      pdf.text('Visualización del Análisis', 20, yPosition);
+      yPosition += 10;
+      
+      try {
+        // Add overlay image (most important visualization)
+        if (result.visualization.overlay) {
+          pdf.setFontSize(10);
+          pdf.text('Superposición Grad-CAM:', 20, yPosition);
+          yPosition += 5;
+          pdf.addImage(result.visualization.overlay, 'PNG', 20, yPosition, 80, 60);
+          yPosition += 70;
+        }
+      } catch (error) {
+        pdf.setFontSize(10);
+        pdf.text('La visualización no pudo incluirse en el reporte', 20, yPosition);
+        yPosition += 10;
+      }
+    } else if (result.originalImageUrl) {
+      // Fallback to original image
       pdf.setFontSize(14);
       pdf.text('Imagen de Fondo de Ojo', 20, yPosition);
       yPosition += 10;
       
       try {
         const imgData = result.originalImageUrl;
-        // Smaller image: 100x60
         pdf.addImage(imgData, 'JPEG', 20, yPosition, 100, 60);
         yPosition += 70;
       } catch (error) {
@@ -99,11 +120,31 @@ export const ResultsSection = ({ result, patientData, showGradcam, onToggleGradc
     pdf.text(`Nivel de Confianza: ${result.confidence}%`, 20, yPosition);
     yPosition += 7;
     
-    const recommendation = isDetected
-      ? "Se recomienda consulta inmediata con oftalmología"
-      : "Continuar monitoreo de rutina";
+    const recommendation = result.recommendation?.action || 
+      (isDetected
+        ? "Se recomienda consulta inmediata con oftalmología"
+        : "Continuar monitoreo de rutina");
     pdf.text(`Recomendación Médica de IA: ${recommendation}`, 20, yPosition);
-    yPosition += 10;
+    yPosition += 7;
+    
+    if (result.recommendation) {
+      pdf.text(`Severidad: ${result.recommendation.severity} | Urgencia: ${result.recommendation.urgency}`, 20, yPosition);
+      yPosition += 7;
+    }
+    
+    if (result.predictionProbabilities) {
+      pdf.text(`Probabilidad Saludable: ${result.predictionProbabilities.Healthy.toFixed(2)}%`, 20, yPosition);
+      yPosition += 7;
+      pdf.text(`Probabilidad Desprendimiento: ${result.predictionProbabilities["Retinal detachment"].toFixed(2)}%`, 20, yPosition);
+      yPosition += 7;
+    }
+    
+    if (result.metadata) {
+      pdf.text(`Tiempo de Procesamiento: ${result.metadata.processingTimeMs.toFixed(0)} ms`, 20, yPosition);
+      yPosition += 7;
+    }
+    
+    yPosition += 3;
     
     // Footer
     pdf.setFontSize(8);
@@ -159,42 +200,151 @@ export const ResultsSection = ({ result, patientData, showGradcam, onToggleGradc
             <div className="p-4 bg-secondary/50 rounded-lg">
               <div className="text-sm text-muted-foreground mb-1">Recomendación Clínica</div>
               <div className="text-sm font-medium text-foreground">
-                {isDetected
-                  ? "Se recomienda consulta inmediata con oftalmología"
-                  : "Continuar monitoreo de rutina"}
+                {result.recommendation?.action || 
+                  (isDetected
+                    ? "Se recomienda consulta inmediata con oftalmología"
+                    : "Continuar monitoreo de rutina")}
               </div>
+              {result.recommendation && (
+                <div className="mt-2 flex gap-2">
+                  <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+                    {result.recommendation.severity}
+                  </span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-secondary/50 text-foreground">
+                    {result.recommendation.urgency}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          {result.gradcamUrl && (
-            <div className="space-y-2">
+          {/* Prediction Probabilities */}
+          {result.predictionProbabilities && (
+            <div className="p-4 bg-secondary/50 rounded-lg space-y-3">
+              <div className="text-sm font-medium text-foreground mb-2">Probabilidades de Predicción</div>
+              <div className="space-y-2">
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-muted-foreground">Saludable</span>
+                    <span className="font-medium text-foreground">
+                      {result.predictionProbabilities.Healthy.toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-success transition-all"
+                      style={{ width: `${result.predictionProbabilities.Healthy}%` }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-muted-foreground">Desprendimiento de Retina</span>
+                    <span className="font-medium text-foreground">
+                      {result.predictionProbabilities["Retinal detachment"].toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-warning transition-all"
+                      style={{ width: `${result.predictionProbabilities["Retinal detachment"]}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Metadata */}
+          {result.metadata && (
+            <div className="p-4 bg-secondary/50 rounded-lg">
+              <div className="text-sm font-medium text-foreground mb-2">Información del Análisis</div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <span className="text-muted-foreground">Tiempo de procesamiento:</span>
+                  <span className="ml-2 text-foreground font-medium">
+                    {result.metadata.processingTimeMs.toFixed(0)} ms
+                  </span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Dispositivo:</span>
+                  <span className="ml-2 text-foreground font-medium uppercase">
+                    {result.metadata.device}
+                  </span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-muted-foreground">Fecha de análisis:</span>
+                  <span className="ml-2 text-foreground font-medium">
+                    {new Date(result.metadata.timestamp).toLocaleString('es-ES')}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {result.visualization && (
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium text-foreground">
-                  Mapa de Calor Grad-CAM
+                  Visualización Grad-CAM
                 </label>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={onToggleGradcam}
                 >
-                  {showGradcam ? "Ocultar Mapa" : "Mostrar Mapa"}
+                  {showGradcam ? "Ocultar Visualización" : "Mostrar Visualización"}
                 </Button>
               </div>
               
               {showGradcam && (
-                <div className="relative rounded-lg overflow-hidden border border-border">
-                  <img
-                    src={result.gradcamUrl}
-                    alt="Grad-CAM heatmap"
-                    className="w-full h-auto max-h-[400px] object-contain"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <p className="text-xs text-white">
-                      Las regiones resaltadas indican áreas de interés identificadas por el modelo de IA
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Original Image */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground">Imagen Original</p>
+                    <div className="relative rounded-lg overflow-hidden border border-border">
+                      <img
+                        src={result.visualization.originalImage}
+                        alt="Original fundus image"
+                        className="w-full h-auto object-contain bg-secondary/20"
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Heatmap */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground">Mapa de Calor</p>
+                    <div className="relative rounded-lg overflow-hidden border border-border">
+                      <img
+                        src={result.visualization.heatmap}
+                        alt="Grad-CAM heatmap"
+                        className="w-full h-auto object-contain bg-secondary/20"
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Overlay */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground">Superposición</p>
+                    <div className="relative rounded-lg overflow-hidden border border-border">
+                      <img
+                        src={result.visualization.overlay}
+                        alt="Grad-CAM overlay"
+                        className="w-full h-auto object-contain bg-secondary/20"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                        <p className="text-xs text-white">
+                          Áreas de interés del modelo de IA
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
+              
+              <p className="text-xs text-muted-foreground">
+                Las regiones resaltadas indican las áreas donde el modelo de IA enfocó su atención durante el análisis.
+              </p>
             </div>
           )}
 

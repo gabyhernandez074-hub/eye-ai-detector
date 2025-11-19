@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Upload, Loader2, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { predictRetinalDetachment } from "@/services/apiService";
 
 interface ImageUploadSectionProps {
   onAnalysisComplete: (result: AnalysisResult) => void;
@@ -11,12 +12,34 @@ interface ImageUploadSectionProps {
 export interface AnalysisResult {
   diagnosis: string;
   confidence: number;
-  gradcamUrl: string;
-  originalImageUrl: string;
+  classIndex: number;
+  predictionProbabilities: {
+    Healthy: number;
+    "Retinal detachment": number;
+  };
+  recommendation: {
+    severity: string;
+    urgency: string;
+    action: string;
+  };
+  metadata: {
+    processingTimeMs: number;
+    device: string;
+    timestamp: string;
+  };
+  visualization?: {
+    originalImage: string;
+    heatmap: string;
+    overlay: string;
+  };
+  // Legacy fields for backwards compatibility
+  gradcamUrl?: string;
+  originalImageUrl?: string;
 }
 
 export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionProps) => {
   const [image, setImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const { toast } = useToast();
@@ -27,12 +50,24 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
     if (!file.type.startsWith("image/")) {
       toast({
         title: "Tipo de archivo inválido",
-        description: "Por favor cargue un archivo de imagen válido (JPEG/PNG)",
+        description: "Por favor cargue un archivo de imagen válido (JPEG/PNG/WebP)",
         variant: "destructive",
       });
       return;
     }
 
+    // Check file size (max 10MB as per API spec)
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (file.size > maxSize) {
+      toast({
+        title: "Archivo demasiado grande",
+        description: "El tamaño máximo de archivo es 10MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setImageFile(file);
     const reader = new FileReader();
     reader.onload = (e) => {
       setImage(e.target?.result as string);
@@ -60,27 +95,60 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
     setIsDragging(false);
   }, []);
 
-  const simulateAnalysis = async () => {
+  const runAnalysis = async () => {
+    if (!imageFile) {
+      toast({
+        title: "Error",
+        description: "No se ha seleccionado ninguna imagen",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsAnalyzing(true);
     
-    // Simulate API call with 2-3 second delay
-    await new Promise(resolve => setTimeout(resolve, 2500));
+    try {
+      // Call the actual API
+      const response = await predictRetinalDetachment(imageFile, true);
+      
+      // Transform API response to match our AnalysisResult interface
+      const result: AnalysisResult = {
+        diagnosis: response.data.diagnosis,
+        confidence: Math.round(response.data.confidence * 100) / 100, // Round to 2 decimals
+        classIndex: response.data.class_index,
+        predictionProbabilities: response.data.prediction_probabilities,
+        recommendation: response.data.recommendation,
+        metadata: {
+          processingTimeMs: response.data.metadata.processing_time_ms,
+          device: response.data.metadata.device,
+          timestamp: response.data.metadata.timestamp,
+        },
+        visualization: response.data.visualization ? {
+          originalImage: response.data.visualization.original_image,
+          heatmap: response.data.visualization.heatmap,
+          overlay: response.data.visualization.overlay,
+        } : undefined,
+        // Backwards compatibility
+        gradcamUrl: response.data.visualization?.overlay || image || "",
+        originalImageUrl: response.data.visualization?.original_image || image || "",
+      };
 
-    // Mock result - in production, this would come from your backend
-    const mockResult: AnalysisResult = {
-      diagnosis: Math.random() > 0.5 ? "Desprendimiento de Retina Detectado" : "Sin Desprendimiento de Retina",
-      confidence: Math.floor(Math.random() * 20 + 80), // 80-100%
-      gradcamUrl: image || "", // In production, this would be a heatmap overlay
-      originalImageUrl: image || "",
-    };
-
-    setIsAnalyzing(false);
-    onAnalysisComplete(mockResult);
-    
-    toast({
-      title: "Análisis Completo",
-      description: "Los resultados están listos para revisar",
-    });
+      onAnalysisComplete(result);
+      
+      toast({
+        title: "Análisis Completo",
+        description: "Los resultados están listos para revisar",
+      });
+    } catch (error) {
+      console.error('Error during analysis:', error);
+      toast({
+        title: "Error en el Análisis",
+        description: error instanceof Error ? error.message : "No se pudo procesar la imagen. Por favor intente nuevamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -153,7 +221,7 @@ export const ImageUploadSection = ({ onAnalysisComplete }: ImageUploadSectionPro
 
         {image && (
           <Button
-            onClick={simulateAnalysis}
+            onClick={runAnalysis}
             disabled={isAnalyzing}
             className="w-full bg-primary hover:bg-primary/90"
           >
